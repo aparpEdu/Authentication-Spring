@@ -1,4 +1,4 @@
-package team.yellow.docconnect.exception;
+package com.example.googleauthenticationspring.exception;
 
 import lombok.Getter;
 import lombok.Setter;

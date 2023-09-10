@@ -1,4 +1,4 @@
-package team.yellow.docconnect.entity;
+package com.example.googleauthenticationspring.role;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

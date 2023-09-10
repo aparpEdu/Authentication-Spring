@@ -1,4 +1,4 @@
-package team.yellow.docconnect.utils;
+package com.example.googleauthenticationspring.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

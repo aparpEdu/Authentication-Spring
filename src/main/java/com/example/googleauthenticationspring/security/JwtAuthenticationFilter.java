@@ -1,4 +1,4 @@
-package team.yellow.docconnect.security;
+package com.example.googleauthenticationspring.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

@@ -1,6 +1,6 @@
-package team.yellow.docconnect.payload.dto;
+package com.example.googleauthenticationspring.google;
 
-public record GoogleUserDto(
+public record GoogleUserDTO(
      String email,
      String given_name,
      String last_name

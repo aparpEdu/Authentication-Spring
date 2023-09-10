@@ -1,7 +1,6 @@
-package team.yellow.docconnect.repository;
+package com.example.googleauthenticationspring.role;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import team.yellow.docconnect.entity.Role;
 
 import java.util.Optional;
 

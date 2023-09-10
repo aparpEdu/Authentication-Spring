@@ -1,5 +1,7 @@
-package team.yellow.docconnect.exception;
+package com.example.googleauthenticationspring.exception;
 
+import com.example.googleauthenticationspring.utils.ErrorDetails;
+import com.example.googleauthenticationspring.utils.Messages;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,8 +10,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import team.yellow.docconnect.utils.ErrorDetails;
-import team.yellow.docconnect.utils.Messages;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,8 +22,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(HealthCareAPIException.class)
-    public ResponseEntity<ErrorDetails> handleHealthCareAPIException(HealthCareAPIException exception){
+    @ExceptionHandler(AuthenticationAPIException.class)
+    public ResponseEntity<ErrorDetails> handleHealthCareAPIException(AuthenticationAPIException exception){
         ErrorDetails errorDetails = new ErrorDetails(exception.getMessage());
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
@@ -32,12 +32,6 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDetails> handleDefaultException(Exception exception){
         ErrorDetails errorDetails = new ErrorDetails(exception.getMessage());
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ErrorDetails> handleAuthenticationException(){
-        ErrorDetails errorDetails = new ErrorDetails(Messages.INCORRECT_CREDENTIALS);
-        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -50,6 +44,13 @@ public class GlobalExceptionHandler {
         });
         return new ResponseEntity<>(errorMessages, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorDetails> handleAuthenticationException(){
+        ErrorDetails errorDetails = new ErrorDetails(Messages.INCORRECT_CREDENTIALS);
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorDetails> handleAccessDeniedException(DataIntegrityViolationException exception){
         ErrorDetails errorDetails = new ErrorDetails(exception.getMessage());

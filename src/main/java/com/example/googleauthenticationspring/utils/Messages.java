@@ -1,4 +1,4 @@
-package team.yellow.docconnect.utils;
+package com.example.googleauthenticationspring.utils;
 
 public class Messages {
 

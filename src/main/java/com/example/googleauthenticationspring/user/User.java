@@ -1,5 +1,6 @@
-package team.yellow.docconnect.entity;
+package com.example.googleauthenticationspring.user;
 
+import com.example.googleauthenticationspring.role.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User {
 
     @Id

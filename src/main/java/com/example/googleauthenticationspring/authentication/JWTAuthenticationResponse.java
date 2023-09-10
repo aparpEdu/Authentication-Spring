@@ -1,4 +1,4 @@
-package team.yellow.docconnect.payload.response;
+package com.example.googleauthenticationspring.authentication;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
