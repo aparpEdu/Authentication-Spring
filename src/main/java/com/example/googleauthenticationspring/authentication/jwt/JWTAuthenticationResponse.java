@@ -1,4 +1,4 @@
-package com.example.googleauthenticationspring.authentication;
+package com.example.googleauthenticationspring.authentication.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,4 +13,5 @@ public class JWTAuthenticationResponse {
 
     private String accessToken;
     private String tokenType = "Bearer";
+    private String refreshToken;
 }

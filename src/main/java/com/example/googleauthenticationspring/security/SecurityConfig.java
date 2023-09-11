@@ -1,8 +1,8 @@
-package com.example.googleauthenticationspring.config;
+package com.example.googleauthenticationspring.security;
 
-import com.example.googleauthenticationspring.security.JwtAuthenticationEntryPoint;
-import com.example.googleauthenticationspring.security.JwtAuthenticationFilter;
-import com.example.googleauthenticationspring.security.JwtTokenProvider;
+import com.example.googleauthenticationspring.authentication.jwt.JwtAuthenticationEntryPoint;
+import com.example.googleauthenticationspring.authentication.jwt.JwtAuthenticationFilter;
+import com.example.googleauthenticationspring.authentication.jwt.JwtTokenProvider;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Value;

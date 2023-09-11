@@ -1,7 +1,9 @@
-package com.example.googleauthenticationspring.security;
+package com.example.googleauthenticationspring.authentication.jwt;
 
 import com.example.googleauthenticationspring.exception.AuthenticationAPIException;
 import com.example.googleauthenticationspring.exception.ResourceNotFoundException;
+import com.example.googleauthenticationspring.authentication.refresh.RefreshToken;
+import com.example.googleauthenticationspring.authentication.refresh.RefreshTokenRepository;
 import com.example.googleauthenticationspring.user.User;
 import com.example.googleauthenticationspring.user.UserRepository;
 import com.example.googleauthenticationspring.utils.Messages;
@@ -14,7 +16,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 public class JwtTokenProvider {
@@ -26,13 +30,14 @@ public class JwtTokenProvider {
     private long jwtExpirationDate;
 
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
-    public JwtTokenProvider(UserRepository userRepository) {
+    public JwtTokenProvider(UserRepository userRepository, RefreshTokenRepository refreshTokenRepository) {
         this.userRepository = userRepository;
+        this.refreshTokenRepository = refreshTokenRepository;
     }
 
-    public String generateToken(Authentication authentication) {
-        String username = authentication.getName();
+    public String generateToken(String username) {
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
         User user = userRepository.findUserByEmailIgnoreCase(username)

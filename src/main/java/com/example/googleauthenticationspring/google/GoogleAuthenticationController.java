@@ -28,8 +28,6 @@ public class GoogleAuthenticationController {
 
     private final GoogleAuthenticationService googleAuthenticationService;
     private final ClientRegistrationRepository clientRegistrationRepository;
-    private final AuthenticationService authenticationService;
-    private final GoogleApi googleApi;
 
 
     @Operation(
@@ -67,46 +65,18 @@ public class GoogleAuthenticationController {
                     Map.class
             );
         String accessToken = (String) Objects.requireNonNull(tokenResponse.getBody()).get("access_token");
-        try {
-            googleApi.fetchUserBirthdate(restTemplate,accessToken);
-        }catch (AuthenticationAPIException e){
-            HttpHeaders errorHeaders = new HttpHeaders();
-            if(e.getMessage().equalsIgnoreCase("User is underage")) {
-                errorHeaders.add("Location", "http://localhost:5173?error=underage");
-            }
-            else{
-                errorHeaders.add("Location", "http://localhost:5173/validate-age");
-                response.addCookie( authenticationService.createCookie("id_token",accessToken, 300));
-            }
-            return new ResponseEntity<>(errorHeaders, HttpStatus.FOUND);
-        }
+
         String token = googleAuthenticationService.googleSignIn(accessToken, restTemplate);
-        response.addCookie(authenticationService.createCookie("access_token",token, 86400));
 
 
-        String redirectUrl = "http://localhost:5173";
+
+        String redirectUrl = "http://localhost:5173?access_token="+token;
 
         HttpHeaders headerz = new HttpHeaders();
         headerz.add("Location", redirectUrl);
         return new ResponseEntity<>(headerz, HttpStatus.FOUND);
     }
 
-    @GetMapping("google/validate-age")
-    public ResponseEntity<String> validateAge(@RequestParam int year, @RequestParam int month, @RequestParam int day,
-                                              @RequestParam String id_token, HttpServletResponse response){
-        try {
-            googleApi.checkUserBirthday(year, month, day);
-            RestTemplate restTemplate = new RestTemplate();
-            String token = googleAuthenticationService.googleSignIn(id_token, restTemplate);
-            response.addCookie(authenticationService.createCookie("access_token", token, 86400));
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Location", "http://localhost:5173");
-            return new ResponseEntity<>(headers, HttpStatus.FOUND);
-        }catch (AuthenticationAPIException e){
-            HttpHeaders errorHeaders = new HttpHeaders();
-            errorHeaders.add("Location", "http://localhost:5173?error=underage");
-            return new ResponseEntity<>(errorHeaders, HttpStatus.FOUND);
-        }
-    }
+
 }
 

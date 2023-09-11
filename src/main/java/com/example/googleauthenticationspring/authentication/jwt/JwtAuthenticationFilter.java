@@ -1,4 +1,4 @@
-package com.example.googleauthenticationspring.security;
+package com.example.googleauthenticationspring.authentication.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

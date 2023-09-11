@@ -1,4 +1,4 @@
-package com.example.googleauthenticationspring.security;
+package com.example.googleauthenticationspring.authentication.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
