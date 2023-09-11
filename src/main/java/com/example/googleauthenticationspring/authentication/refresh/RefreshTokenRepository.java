@@ -1,11 +1,11 @@
 package com.example.googleauthenticationspring.authentication.refresh;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-public interface RefreshTokenRepository  extends JpaRepository<RefreshToken, Long> {
-
-    Optional<RefreshToken> findByUserId(Long userId);
+@Repository
+public interface RefreshTokenRepository extends CrudRepository<RefreshToken, String> {
     Optional<RefreshToken> findByToken(String token);
 }
