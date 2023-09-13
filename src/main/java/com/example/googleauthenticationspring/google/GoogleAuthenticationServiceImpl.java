@@ -1,6 +1,7 @@
 package com.example.googleauthenticationspring.google;
 
 import com.example.googleauthenticationspring.authentication.AuthenticationHelper;
+import com.example.googleauthenticationspring.authentication.jwt.TokenType;
 import com.example.googleauthenticationspring.exception.ResourceNotFoundException;
 import com.example.googleauthenticationspring.authentication.jwt.JwtTokenProvider;
 import com.example.googleauthenticationspring.user.User;
@@ -57,7 +58,7 @@ public class GoogleAuthenticationServiceImpl implements GoogleAuthenticationServ
                 .authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), randomPassword));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return jwtTokenProvider.generateToken(authentication.getName());
+        return jwtTokenProvider.generateToken(authentication.getName(), TokenType.ACCESS);
 
     }
 

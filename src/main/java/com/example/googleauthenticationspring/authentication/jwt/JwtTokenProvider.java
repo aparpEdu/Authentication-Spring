@@ -29,17 +29,26 @@ public class JwtTokenProvider {
     @Value("${app.jwt-expiration-milliseconds}")
     private long jwtExpirationDate;
 
-    private final UserRepository userRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
+    @Value("${app.jwt-refresh-expiration-miliseconds}")
+    private long jwtRefreshExpiry;
 
-    public JwtTokenProvider(UserRepository userRepository, RefreshTokenRepository refreshTokenRepository) {
+    private final UserRepository userRepository;
+
+
+    public JwtTokenProvider(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.refreshTokenRepository = refreshTokenRepository;
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String username, TokenType tokenType) {
         Date currentDate = new Date();
-        Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
+        Date expireDate;
+
+        if(tokenType.equals(TokenType.ACCESS)) {
+             expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
+        }
+        else{
+            expireDate = new Date(currentDate.getTime() + jwtRefreshExpiry);
+        }
         User user = userRepository.findUserByEmailIgnoreCase(username)
                 .orElseThrow( () ->new ResourceNotFoundException("User", "Email", username));
         Claims claims = Jwts.claims().setSubject(username);
