@@ -1,7 +1,6 @@
 package com.example.googleauthenticationspring.authentication;
 
 import com.example.googleauthenticationspring.authentication.jwt.JWTAuthenticationResponse;
-import com.example.googleauthenticationspring.authentication.refresh.RefreshTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
-    private final RefreshTokenService refreshTokenService;
 
 
     @Operation(
@@ -75,7 +73,7 @@ public class AuthenticationController {
             name = "Bearer Authentication"
     )
     public ResponseEntity<JWTAuthenticationResponse> refreshToken(HttpServletRequest request){
-        return ResponseEntity.ok(refreshTokenService.refreshToken(request));
+        return ResponseEntity.ok(authenticationService.refreshToken(request));
     }
 
     @Operation(

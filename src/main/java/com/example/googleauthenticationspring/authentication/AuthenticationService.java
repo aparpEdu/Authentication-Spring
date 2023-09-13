@@ -1,12 +1,14 @@
 package com.example.googleauthenticationspring.authentication;
 
 import com.example.googleauthenticationspring.authentication.jwt.JWTAuthenticationResponse;
+import com.example.googleauthenticationspring.authentication.jwt.JwtAuthenticationFilter;
 import com.example.googleauthenticationspring.authentication.jwt.JwtTokenProvider;
 import com.example.googleauthenticationspring.authentication.jwt.TokenType;
 import com.example.googleauthenticationspring.exception.AuthenticationAPIException;
 import com.example.googleauthenticationspring.user.User;
 import com.example.googleauthenticationspring.user.UserRepository;
 import com.example.googleauthenticationspring.utils.Messages;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +27,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationHelper authenticationHelper;
+    private final JwtAuthenticationFilter authenticationFilter;
 
     public JWTAuthenticationResponse login(LoginDTO loginDto) {
         Authentication authentication =
@@ -58,5 +61,13 @@ public class AuthenticationService {
     public String logout(){
         SecurityContextHolder.clearContext();
         return "Successfully logged out";
+    }
+
+    public JWTAuthenticationResponse refreshToken(HttpServletRequest request){
+        JWTAuthenticationResponse authenticationResponse = new JWTAuthenticationResponse();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        authenticationResponse.setAccessToken(jwtTokenProvider.generateToken(authentication.getName(), TokenType.ACCESS));
+        authenticationResponse.setRefreshToken(authenticationFilter.getTokenFromRequest(request));
+        return authenticationResponse;
     }
 }
