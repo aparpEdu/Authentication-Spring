@@ -7,11 +7,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -57,8 +59,8 @@ public class AuthenticationController {
     )
     @PreAuthorize("hasRole('USER')")
     @GetMapping("home")
-    public ResponseEntity<String> welcome(){
-        return ResponseEntity.ok("Welcome");
+    public ResponseEntity<String> welcome(Authentication authentication){
+        return ResponseEntity.ok(authentication.getName());
     }
 
     @Operation(
@@ -70,8 +72,11 @@ public class AuthenticationController {
             description = "Http Status 200 SUCCESS"
     )
     @PostMapping("refresh")
-    public ResponseEntity<JWTAuthenticationResponse> refreshToken(@Valid @RequestBody RefreshTokenDTO refreshTokenDTO){
-        return ResponseEntity.ok(refreshTokenService.refreshToken(refreshTokenDTO));
+    @SecurityRequirement(
+            name = "Bearer Authentication"
+    )
+    public ResponseEntity<JWTAuthenticationResponse> refreshToken(HttpServletRequest request){
+        return ResponseEntity.ok(refreshTokenService.refreshToken(request));
     }
 
     @Operation(
@@ -83,7 +88,7 @@ public class AuthenticationController {
             description = "Http Status 200 SUCCESS"
     )
     @PostMapping("logout")
-    public ResponseEntity<String> logout(@Valid @RequestBody RefreshTokenDTO refreshTokenDTO){
-        return ResponseEntity.ok(authenticationService.logout(refreshTokenDTO));
+    public ResponseEntity<String> logout(){
+        return ResponseEntity.ok(authenticationService.logout());
     }
 }

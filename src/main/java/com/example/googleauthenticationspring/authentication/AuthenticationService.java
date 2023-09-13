@@ -1,10 +1,10 @@
 package com.example.googleauthenticationspring.authentication;
 
 import com.example.googleauthenticationspring.authentication.jwt.JWTAuthenticationResponse;
-import com.example.googleauthenticationspring.authentication.refresh.RefreshTokenDTO;
-import com.example.googleauthenticationspring.authentication.refresh.RefreshTokenService;
-import com.example.googleauthenticationspring.exception.AuthenticationAPIException;
 import com.example.googleauthenticationspring.authentication.jwt.JwtTokenProvider;
+import com.example.googleauthenticationspring.authentication.jwt.TokenType;
+import com.example.googleauthenticationspring.authentication.refresh.RefreshTokenDTO;
+import com.example.googleauthenticationspring.exception.AuthenticationAPIException;
 import com.example.googleauthenticationspring.user.User;
 import com.example.googleauthenticationspring.user.UserRepository;
 import com.example.googleauthenticationspring.utils.Messages;
@@ -26,15 +26,14 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationHelper authenticationHelper;
-    private final RefreshTokenService refreshTokenService;
 
     public JWTAuthenticationResponse login(LoginDTO loginDto) {
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.email(), loginDto.password()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         JWTAuthenticationResponse authenticationResponse = new JWTAuthenticationResponse();
-        authenticationResponse.setAccessToken(jwtTokenProvider.generateToken(authentication.getName()));
-        authenticationResponse.setRefreshToken(refreshTokenService.createRefreshToken(authentication));
+        authenticationResponse.setAccessToken(jwtTokenProvider.generateToken(authentication.getName(), TokenType.ACCESS));
+        authenticationResponse.setRefreshToken(jwtTokenProvider.generateToken(authentication.getName(), TokenType.REFRESH));
         return authenticationResponse;
     }
 
@@ -57,9 +56,8 @@ public class AuthenticationService {
         return authenticationHelper.setRoles(user);
     }
 
-    public String logout(RefreshTokenDTO refreshTokenDTO){
+    public String logout(){
         SecurityContextHolder.clearContext();
-        refreshTokenService.removeExistingRefreshToken(refreshTokenDTO.refreshToken());
         return "Successfully logged out";
     }
 }
