@@ -2,8 +2,6 @@ package com.example.googleauthenticationspring.authentication.jwt;
 
 import com.example.googleauthenticationspring.exception.AuthenticationAPIException;
 import com.example.googleauthenticationspring.exception.ResourceNotFoundException;
-import com.example.googleauthenticationspring.authentication.refresh.RefreshToken;
-import com.example.googleauthenticationspring.authentication.refresh.RefreshTokenRepository;
 import com.example.googleauthenticationspring.user.User;
 import com.example.googleauthenticationspring.user.UserRepository;
 import com.example.googleauthenticationspring.utils.Messages;
@@ -12,13 +10,10 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.Optional;
 
 @Component
 public class JwtTokenProvider {

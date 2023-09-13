@@ -1,7 +1,6 @@
 package com.example.googleauthenticationspring.authentication;
 
 import com.example.googleauthenticationspring.authentication.jwt.JWTAuthenticationResponse;
-import com.example.googleauthenticationspring.authentication.refresh.RefreshTokenDTO;
 import com.example.googleauthenticationspring.authentication.refresh.RefreshTokenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

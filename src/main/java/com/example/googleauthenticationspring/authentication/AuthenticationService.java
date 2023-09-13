@@ -3,7 +3,6 @@ package com.example.googleauthenticationspring.authentication;
 import com.example.googleauthenticationspring.authentication.jwt.JWTAuthenticationResponse;
 import com.example.googleauthenticationspring.authentication.jwt.JwtTokenProvider;
 import com.example.googleauthenticationspring.authentication.jwt.TokenType;
-import com.example.googleauthenticationspring.authentication.refresh.RefreshTokenDTO;
 import com.example.googleauthenticationspring.exception.AuthenticationAPIException;
 import com.example.googleauthenticationspring.user.User;
 import com.example.googleauthenticationspring.user.UserRepository;
