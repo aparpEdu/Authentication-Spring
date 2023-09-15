@@ -40,14 +40,13 @@ public class JwtTokenProvider {
         Date currentDate = new Date();
         Date expireDate;
 
-        if(tokenType.equals(TokenType.ACCESS)) {
-             expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
-        }
-        else{
+        if (tokenType.equals(TokenType.ACCESS)) {
+            expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
+        } else {
             expireDate = new Date(currentDate.getTime() + jwtRefreshExpiry);
         }
         User user = userRepository.findUserByEmailIgnoreCase(username)
-                .orElseThrow( () ->new ResourceNotFoundException("User", "Email", username));
+                .orElseThrow(() -> new ResourceNotFoundException("User", "Email", username));
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("firstName", user.getFirstName());
         claims.put("lastName", user.getLastName());
@@ -73,7 +72,9 @@ public class JwtTokenProvider {
         return claims.getSubject();
     }
 
-    public boolean validateToken(String token) {
+
+    public boolean validateToken(String token, HttpServletResponse response) throws IOException {
+        response.setContentType("application/json");
         try {
             Jwts.parserBuilder()
                     .setSigningKey(key())
@@ -81,48 +82,25 @@ public class JwtTokenProvider {
                     .parse(token);
             return true;
         } catch (MalformedJwtException e) {
-            throw new AuthenticationAPIException(HttpStatus.UNAUTHORIZED, Messages.INVALID_JWT_TOKEN);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(Messages.INVALID_JWT_TOKEN);
+            response.getWriter().flush();
+            return false;
         } catch (ExpiredJwtException e) {
-            throw new AuthenticationAPIException(HttpStatus.UNAUTHORIZED, Messages.EXPIRED_JWT_TOKEN);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(Messages.EXPIRED_JWT_TOKEN);
+            response.getWriter().flush();
+            return false;
         } catch (UnsupportedJwtException e) {
-            throw new AuthenticationAPIException(HttpStatus.UNAUTHORIZED, Messages.UNSUPPORTED_JWT_TOKEN);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(Messages.UNSUPPORTED_JWT_TOKEN);
+            response.getWriter().flush();
+            return false;
         } catch (IllegalArgumentException e) {
-            throw new AuthenticationAPIException(HttpStatus.UNAUTHORIZED, Messages.JWT_CLAIM_EMPTY);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write(Messages.JWT_CLAIM_EMPTY);
+            response.getWriter().flush();
+            return false;
         }
     }
-public boolean validateToken(String token, HttpServletResponse response) throws IOException {
-    response.setContentType("application/json");
-    try {
-        Jwts.parserBuilder()
-                .setSigningKey(key())
-                .build()
-                .parse(token);
-        return true;
-    } catch (MalformedJwtException e) {
-        // Set a custom error response for invalid JWT token
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write(Messages.INVALID_JWT_TOKEN);
-        response.getWriter().flush();
-        return false; // Return false to indicate validation failure
-    } catch (ExpiredJwtException e) {
-        // Set a custom error response for expired JWT token
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write("{\"error\": \"Expired JWT Token\"}");
-        response.getWriter().flush();
-        return false; // Return false to indicate validation failure
-    } catch (UnsupportedJwtException e) {
-        // Set a custom error response for unsupported JWT token
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write(Messages.UNSUPPORTED_JWT_TOKEN);
-        response.getWriter().flush();
-        return false; // Return false to indicate validation failure
-    } catch (IllegalArgumentException e) {
-        // Set a custom error response for empty JWT claims
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write(Messages.JWT_CLAIM_EMPTY);
-        response.getWriter().flush();
-        return false; // Return false to indicate validation failure
-    }
-}
-
 }
