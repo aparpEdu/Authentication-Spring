@@ -63,11 +63,10 @@ public class AuthenticationService {
         return "Successfully logged out";
     }
 
-    public JWTAuthenticationResponse refreshToken(HttpServletRequest request){
+    public JWTAuthenticationResponse refreshToken(Authentication authentication){
         JWTAuthenticationResponse authenticationResponse = new JWTAuthenticationResponse();
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         authenticationResponse.setAccessToken(jwtTokenProvider.generateToken(authentication.getName(), TokenType.ACCESS));
-        authenticationResponse.setRefreshToken(authenticationFilter.getTokenFromRequest(request));
+        authenticationResponse.setRefreshToken(jwtTokenProvider.generateToken(authentication.getName(), TokenType.REFRESH));
         return authenticationResponse;
     }
 }

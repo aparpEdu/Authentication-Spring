@@ -2,6 +2,7 @@ package com.example.googleauthenticationspring.exception;
 
 import com.example.googleauthenticationspring.utils.ErrorDetails;
 import com.example.googleauthenticationspring.utils.Messages;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +23,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
+
+
     @ExceptionHandler(AuthenticationAPIException.class)
-    public ResponseEntity<ErrorDetails> handleHealthCareAPIException(AuthenticationAPIException exception){
+    public ResponseEntity<ErrorDetails> handleAuthenticationAPIException(AuthenticationAPIException exception){
         ErrorDetails errorDetails = new ErrorDetails(exception.getMessage());
-        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorDetails, exception.getStatus());
     }
+
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> handleDefaultException(Exception exception){
@@ -48,6 +53,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorDetails> handleAuthenticationException(){
         ErrorDetails errorDetails = new ErrorDetails(Messages.INCORRECT_CREDENTIALS);
+        return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<ErrorDetails> handleExpiredJwtException(){
+        ErrorDetails errorDetails = new ErrorDetails(Messages.EXPIRED_JWT_TOKEN);
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 

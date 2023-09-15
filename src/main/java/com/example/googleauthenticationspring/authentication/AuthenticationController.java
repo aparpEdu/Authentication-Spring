@@ -72,8 +72,8 @@ public class AuthenticationController {
     @SecurityRequirement(
             name = "Bearer Authentication"
     )
-    public ResponseEntity<JWTAuthenticationResponse> refreshToken(HttpServletRequest request){
-        return ResponseEntity.ok(authenticationService.refreshToken(request));
+    public ResponseEntity<JWTAuthenticationResponse> refreshToken(Authentication authentication){
+        return ResponseEntity.ok(authenticationService.refreshToken(authentication));
     }
 
     @Operation(
