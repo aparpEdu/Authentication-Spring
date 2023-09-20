@@ -5,6 +5,7 @@ import com.example.googleauthenticationspring.utils.Messages;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -53,6 +54,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDetails> handleAuthenticationException(){
         ErrorDetails errorDetails = new ErrorDetails(Messages.INCORRECT_CREDENTIALS);
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorDetails> handleAccessDeniedException(){
+        ErrorDetails errorDetails = new ErrorDetails(Messages.NOT_PERMITTED);
+        return new ResponseEntity<>(errorDetails, HttpStatus.FORBIDDEN);
     }
 
 
